@@ -1,20 +1,26 @@
-# Functional vs. Imperative Data Structures Analysis 🌳🔍
+BST
 
-Welcome to our comprehensive project where we delve into the fascinating comparison between purely functional data structures (lists and trees) and their imperative counterparts. Our objective is to rigorously evaluate various aspects such as memory usage, performance, and the efficiency of parallelization, providing insightful analysis on each.
+Execution Time Measurement
 
-## 🎯 Project Overview
+C++: Uses std::chrono::high_resolution_clock for precise timing of insertions, measured in milliseconds, suitable for detailed performance tuning (cppreference.com).
 
-This project aims to explore the implementation nuances and performance metrics of functional data structures in Haskell compared to imperative implementations in C++. We dissect:
+Haskell: Utilizes Data.Time.Clock.getCurrentTime to record timestamps before and after operations, ideal for broader performance assessments. Detailed guidance is available on Stack Overflow.
 
-- **🧠 Memory Usage**: A detailed analysis of how memory allocation differs between functional and imperative data structures.
-- **⏱ Performance**: We benchmark operations like insertion, deletion, and lookup to gauge efficiency.
-- **🚀 Parallelization Efficacy**: Assessing if parallelization offers tangible benefits in functional structures versus imperative ones.
-- **🌟 Added Value**: Discussing the inherent benefits of immutability, ease of reasoning, and safety in functional programming.
 
-## 📂 Project Structure
+Memory Usage Tracking
 
-- **`/Cpp`**:
-  - `bst.cpp`: Contains the C++ implementation of binary search trees alongside benchmarking procedures.
-- **`/Haskell`**:
-  - `BST.hs`: Showcases the Haskell implementation of binary search trees with integrated performance benchmarks.
+C++: Manually updates totalMemory during node insertion, providing continuous tracking of memory allocations.
+
+Haskell: Combines System.Mem.performGC with GHC.Stats.getRTSStats to ensure memory measurements are accurate after garbage collection, reflecting true memory usage more relevant in a garbage-collected environment. Further details can be found on Stack Overflow.
+
+
+Time Complexity
+
+Both Languages: Insertion complexity is O(log n) in balanced cases but can worsen to O(n) with unbalanced insertions due to sorted inputs. This behavior is common across both paradigms but is more critically observed in functional implementations where immutability might introduce additional overhead.
+
+
+Key Differences
+C++ (Imperative): Focuses on micro-optimizations and precise control over memory and performance, suitable for environments where these factors are critical.
+
+Haskell (Functional): Emphasizes correctness and maintainability, with performance measured in a way that accounts for garbage collection, which can significantly affect both runtime and memory usage.
 
