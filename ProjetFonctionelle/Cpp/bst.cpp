@@ -9,7 +9,7 @@
 template<typename T>
 class BST {
 public:
-    BST() : root(nullptr) {}
+    BST() : root(nullptr), totalMemory(0) {}
 
     void insert(const T& value) {
         insert(value, root);
@@ -19,17 +19,24 @@ public:
         inorder(visit, root);
     }
 
+    size_t getMemoryUsage() const {
+        return totalMemory;
+    }
+
 private:
     struct Node {
         T value;
         std::unique_ptr<Node> left, right;
         Node(T val) : value(val), left(nullptr), right(nullptr) {}
     };
+
     std::unique_ptr<Node> root;
+    size_t totalMemory; // Tracks memory usage
 
     void insert(const T& value, std::unique_ptr<Node>& node) {
         if (!node) {
             node = std::make_unique<Node>(value);
+            totalMemory += sizeof(Node); // Increment memory usage
         } else if (value < node->value) {
             insert(value, node->left);
         } else if (value > node->value) {
@@ -61,7 +68,12 @@ void benchmarkInsertion(size_t n) {
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-    std::cout << "Time taken to insert " << n << " elements: " << duration.count() << " milliseconds\n";
+    size_t memoryUsage = bst.getMemoryUsage();
+
+    std::cout << "Benchmark Results for " << n << " elements:\n";
+    std::cout << "Time taken: " << duration.count() << " milliseconds\n";
+    std::cout << "Memory used: " << memoryUsage << " bytes\n";
+    std::cout << "----------------------------------------\n";
 }
 
 int main() {
