@@ -6,10 +6,23 @@
 #include <memory>
 #include <functional>
 
+// Global memory usage counter
+static size_t totalAllocated = 0;
+
+void* operator new(size_t size) {
+    totalAllocated += size;
+    return malloc(size);
+}
+
+void operator delete(void* memory, size_t size) noexcept {
+    totalAllocated -= size;
+    free(memory);
+}
+
 template<typename T>
 class BST {
 public:
-    BST() : root(nullptr), totalMemory(0) {}
+    BST() : root(nullptr) {}
 
     void insert(const T& value) {
         insert(value, root);
@@ -19,24 +32,26 @@ public:
         inorder(visit, root);
     }
 
-    size_t getMemoryUsage() const {
-        return totalMemory;
+    static size_t getMemoryUsage() {
+        return totalAllocated;
     }
 
 private:
     struct Node {
         T value;
-        std::unique_ptr<Node> left, right;
-        Node(T val) : value(val), left(nullptr), right(nullptr) {}
+        Node* left = nullptr, *right = nullptr;
+        Node(T val) : value(val) {}
+        ~Node() {
+            delete left;
+            delete right;
+        }
     };
 
-    std::unique_ptr<Node> root;
-    size_t totalMemory; // Tracks memory usage
+    Node* root;
 
-    void insert(const T& value, std::unique_ptr<Node>& node) {
+    void insert(const T& value, Node*& node) {
         if (!node) {
-            node = std::make_unique<Node>(value);
-            totalMemory += sizeof(Node); // Increment memory usage
+            node = new Node(value);
         } else if (value < node->value) {
             insert(value, node->left);
         } else if (value > node->value) {
@@ -44,7 +59,7 @@ private:
         }
     }
 
-    void inorder(std::function<void(const T&)> visit, const std::unique_ptr<Node>& node) const {
+    void inorder(std::function<void(const T&)> visit, Node* node) const {
         if (node) {
             inorder(visit, node->left);
             visit(node->value);
@@ -54,21 +69,19 @@ private:
 };
 
 void benchmarkInsertion(size_t n) {
+    totalAllocated = 0; // Reset memory counter
     BST<int> bst;
     std::vector<int> values(n);
-
     std::generate(values.begin(), values.end(), []() { return std::rand() % 1000000; });
 
     auto start = std::chrono::high_resolution_clock::now();
-
     for (int value : values) {
         bst.insert(value);
     }
-
     auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-    size_t memoryUsage = bst.getMemoryUsage();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    size_t memoryUsage = BST<int>::getMemoryUsage();
 
     std::cout << "Benchmark Results for " << n << " elements:\n";
     std::cout << "Time taken: " << duration.count() << " milliseconds\n";
