@@ -2,6 +2,8 @@ import System.Random
 import Control.Monad
 import Data.Time.Clock
 import qualified Data.List as List
+import GHC.Stats
+import System.Mem 
 
 data BST a = Empty | Node a (BST a) (BST a) deriving (Show)
 
@@ -23,10 +25,15 @@ benchmarkInsertion :: Int -> IO ()
 benchmarkInsertion n = do
     values <- randomList n
     start <- getCurrentTime
+    performGC 
     let bst = foldr insert Empty values
     end <- bst `seq` getCurrentTime
+    performGC 
+    stats <- getRTSStats
     let duration = diffUTCTime end start
+        memoryUsage = max_mem_in_use_bytes stats
     putStrLn $ "Time taken to insert " ++ show n ++ " elements: " ++ show duration ++ " seconds"
+    putStrLn $ "Memory used: " ++ show memoryUsage ++ " bytes"
 
 main :: IO ()
 main = do
