@@ -51,10 +51,8 @@ void benchmarkStack(size_t n) {
         stack = stack.push(value);
     }
 
-    // Calculate memory usage
     size_t memoryUsage = n * (sizeof(int) + sizeof(std::shared_ptr<const typename Stack<int>::Node>));
 
-    // Pop all elements from the stack
     while (!stack.isEmpty()) {
         stack = stack.pop();
     }
