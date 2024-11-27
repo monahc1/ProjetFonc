@@ -8,7 +8,7 @@ import System.Mem
 data BST a = Empty | Node a (BST a) (BST a) deriving (Show)
 
 insert :: Ord a => a -> BST a -> BST a
-insert x Empty = Node x Empty Emptya
+insert x Empty = Node x Empty Empty
 insert x (Node a left right)
     | x < a     = Node a (insert x left) right
     | x > a     = Node a left (insert x right)
