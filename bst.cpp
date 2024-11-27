@@ -6,7 +6,7 @@
 #include <memory>
 #include <functional>
 
-// Global memory usage counter
+
 static size_t totalAllocated = 0;
 
 void* operator new(size_t size) {
@@ -25,7 +25,10 @@ public:
     BST() : root(nullptr) {}
 
     void insert(const T& value) {
+        size_t before = totalAllocated; 
         insert(value, root);
+        size_t after = totalAllocated; 
+        totalMemoryUsed += (after - before); 
     }
 
     void inorder(std::function<void(const T&)> visit) const {
@@ -33,7 +36,7 @@ public:
     }
 
     static size_t getMemoryUsage() {
-        return totalAllocated;
+        return totalMemoryUsed;
     }
 
 private:
@@ -66,10 +69,12 @@ private:
             inorder(visit, node->right);
         }
     }
+
+    static inline size_t totalMemoryUsed = 0;
 };
 
 void benchmarkInsertion(size_t n) {
-    totalAllocated = 0; // Reset memory counter
+    totalAllocated = 0; 
     BST<int> bst;
     std::vector<int> values(n);
     std::generate(values.begin(), values.end(), []() { return std::rand() % 1000000; });
