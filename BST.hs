@@ -1,9 +1,9 @@
-import System.Random (randomRIO)
-import Control.Monad (replicateM)
-import Data.Time.Clock (getCurrentTime, diffUTCTime)
-import System.Mem (performGC)
-import GHC.Stats (getRTSStats, max_mem_in_use_bytes)
-import Control.DeepSeq (deepseq)
+import System.Random
+import Control.Monad 
+import Data.Time.Clock 
+import System.Mem 
+import GHC.Stats 
+import Control.DeepSeq 
 
 data BST a = Empty | Node a (BST a) (BST a) deriving (Show)
 
