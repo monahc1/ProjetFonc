@@ -1,9 +1,9 @@
-import System.Random (newStdGen, randomRs)
-import Data.Time.Clock (getCurrentTime, diffUTCTime, NominalDiffTime)
-import Control.DeepSeq (deepseq)
+import System.Random 
+import Data.Time.Clock 
+import Control.DeepSeq 
 import qualified Data.IntMap.Strict as IntMap
-import Control.Exception (evaluate)
-import Data.List (foldl')
+import Control.Exception 
+import Data.List 
 
 
 type Graph = IntMap.IntMap [Int]
