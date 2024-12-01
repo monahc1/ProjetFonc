@@ -1,10 +1,11 @@
+import System.Random
 import Control.Monad
 import Data.Time.Clock
-import System.Random (randomRs, newStdGen)
+import GHC.Stats
+import System.Mem 
 
 
 type Stack a = [a]
-
 
 push :: a -> Stack a -> Stack a
 push x s = x : s
@@ -15,39 +16,37 @@ pop [] = error "Empty stack"
 pop (x:xs) = (x, xs)
 
 
-peek :: Stack a -> a
-peek [] = error "Empty stack"
-peek (x:_) = x
-
-
-isEmpty :: Stack a -> Bool
-isEmpty [] = True
-isEmpty _  = False
-
-
-popAll :: Stack Int -> Stack Int
-popAll [] = []
-popAll s = let (_, s') = pop s in popAll s'
-
+popAllAndSum :: Num a => Stack a -> a
+popAllAndSum [] = 0
+popAllAndSum s = let (x, s') = pop s in x + popAllAndSum s'
 
 randomList :: Int -> IO [Int]
-randomList n = do
-    gen <- newStdGen
-    return $ take n $ randomRs (0, n) gen
-
+randomList n = replicateM n $ randomRIO (1, 1000000)
 
 benchmarkStackOperations :: Int -> IO ()
 benchmarkStackOperations n = do
     values <- randomList n
-    start <- getCurrentTime
+    performGC
+    startPush <- getCurrentTime
     let stack = foldr push [] values
-    mid <- getCurrentTime
-    let _ = popAll stack
-    end <- getCurrentTime
-    let pushDuration = diffUTCTime mid start
-    let popDuration = diffUTCTime end mid
-    putStrLn $ "Time taken to push " ++ show n ++ " elements: " ++ show pushDuration ++ " seconds"
-    putStrLn $ "Time taken to pop " ++ show n ++ " elements: " ++ show popDuration ++ " seconds"
+    endPush <- stack seq getCurrentTime  -- Force evaluation of the push operation
+    performGC
+    statsPush <- getRTSStats
+    startPop <- getCurrentTime
+    let result = popAllAndSum stack
+    endPop <- result seq getCurrentTime  -- Force evaluation of the pop operation
+    performGC
+    statsPop <- getRTSStats
+    let pushDuration = diffUTCTime endPush startPush
+        popDuration = diffUTCTime endPop startPop
+        memoryUsagePush = max_mem_in_use_bytes statsPush
+        memoryUsagePop = max_mem_in_use_bytes statsPop
+    putStrLn $ "Operation: Push " ++ show n ++ " elements"
+    putStrLn $ "Time: " ++ show pushDuration ++ " seconds"
+    putStrLn $ "Memory: " ++ show memoryUsagePush ++ " bytes"
+    putStrLn $ "Operation: Pop " ++ show n ++ " elements"
+    putStrLn $ "Time: " ++ show popDuration ++ " seconds"
+    putStrLn $ "Memory: " ++ show memoryUsagePop ++ " bytes"
 
 
 main :: IO ()
