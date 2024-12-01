@@ -1,9 +1,9 @@
 import Control.DeepSeq (NFData, rnf, deepseq)
 import System.Random (randomRIO)
-import Control.Monad (replicateM)
+import Control.Monad (replicateM, when)
 import Data.Time.Clock (getCurrentTime, diffUTCTime)
 import System.Mem (performGC)
-import GHC.Stats (getRTSStats, max_mem_in_use_bytes)
+import GHC.Stats (getRTSStatsEnabled, getRTSStats, RTSStats(..))
 
 data Queue a = Queue [a] [a] deriving (Show)
 
@@ -36,15 +36,17 @@ benchmarkQueueOperations n = do
     queue deepseq return ()
     end <- getCurrentTime
     performGC
-    stats <- getRTSStats
-    let duration = diffUTCTime end start
-        memoryUsage = max_mem_in_use_bytes stats
-        estimatedMemory = estimateMemory n
-    putStrLn $ "Benchmark for " ++ show n ++ " elements:"
-    putStrLn $ "Time taken: " ++ show duration ++ " seconds"
-    putStrLn $ "Memory: " ++ show memoryUsage ++ " bytes"
-    putStrLn $ "Estimated memory usage: " ++ show estimatedMemory ++ " bytes"
-    putStrLn "--------------------------------------------------"
+    enabled <- getRTSStatsEnabled
+    when enabled $ do
+        stats <- getRTSStats
+        let duration = diffUTCTime end start
+            memoryUsage = max_mem_in_use_bytes stats
+            estimatedMemory = estimateMemory n
+        putStrLn $ "Benchmark for " ++ show n ++ " elements:"
+        putStrLn $ "Time taken: " ++ show duration ++ " seconds"
+        putStrLn $ "Memory: " ++ show memoryUsage ++ " bytes"
+        putStrLn $ "Estimated memory usage: " ++ show estimatedMemory ++ " bytes"
+        putStrLn "--------------------------------------------------"
 
 main :: IO ()
 main = do
