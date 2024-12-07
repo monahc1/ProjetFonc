@@ -15,11 +15,11 @@ We also developed a user-friendly graphical interface for visualizing results .
 
 📌 Team Contributions
 
-Hussein Dakroub: Stack , Queue , GUI
+Hussein Dakroub (222635) : Stack , Queue , GUI
 
-Malih Assaad: LinkedList , List , GUI
+Malih Assaad (222900) : LinkedList , List , GUI
 
-Mona El Hajj Chehade: Graph , Binary Search Tree , GUI
+Mona El Hajj Chehade (211502) : Graph , Binary Search Tree , GUI
 
 ⚙️ How to Run
 
