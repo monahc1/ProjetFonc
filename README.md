@@ -12,8 +12,11 @@ Memory Usage
 We also developed a user-friendly graphical interface for visualizing results .
 
 📌 Team Contributions
+
 Hussein Dakroub: Stack , Queue , GUI
+
 Malih Assaad: LinkedList , List , GUI
+
 Mona El Hajj Chehade: Graph , Binary Search Tree , GUI
 
 ⚙️ How to Run
