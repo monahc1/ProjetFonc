@@ -7,7 +7,7 @@ from tkinter import filedialog, messagebox
 
 performance_data = {
     "Graph": {
-        "color": "#FFB6C1",
+        "color": "#8B0000",
         "elements": [1000, 2000, 5000],
         "cpp_time": [0, 0, 1],
         "haskell_time": [0.0038935, 0.0087604, 0.0263161],
@@ -15,7 +15,7 @@ performance_data = {
         "haskell_memory": [140000, 280000, 700000],
     },
     "Binary Search Tree": {
-        "color": "#87CEFA",
+        "color": "#8B0000",
         "elements": [10000, 20000, 50000],
         "cpp_time": [1, 3, 9],
         "haskell_time": [0.0496712, 0.0545398, 0.0720584],
@@ -23,7 +23,7 @@ performance_data = {
         "haskell_memory": [240000, 480000, 1200000],
     },
     "Queue": {
-        "color": "#FFDEAD",
+        "color": "#8B0000",
         "elements": [10000, 20000, 50000],
         "cpp_time": [3, 7, 20],
         "haskell_time": [0.0516178, 0.0525915, 0.0632966],
@@ -31,7 +31,7 @@ performance_data = {
         "haskell_memory": [91226112, 93323264, 100663296],
     },
     "Stack": {
-        "color": "#E0FFFF",
+        "color": "#8B0000",
         "elements": [100000, 200000, 500000],
         "cpp_time": [125, 250, 650],
         "haskell_time": [0.15, 0.3, 12.0],
@@ -39,7 +39,7 @@ performance_data = {
         "haskell_memory": [2400000, 4800000, 12000000],
     },
     "List": {
-        "color": "#FFDAB9",
+        "color": "#8B0000",
         "elements": [10000, 20000, 50000],
         "cpp_time": [3, 8, 19],
         "haskell_time": [0.0338931, 0.0378727, 0.0543314],
@@ -47,7 +47,7 @@ performance_data = {
         "haskell_memory": [63963136, 74448896, 92274688],
     },
     "LinkedList": {
-        "color": "#B0E0E6",
+        "color": "#8B0000",
         "elements": [10000, 20000, 50000],
         "cpp_time": [70, 160, 400],
         "haskell_time": [0.0329523, 0.0368809, 0.0473629],
@@ -64,7 +64,7 @@ def update_graph(selected_ds, axes, fig):
         ax.clear()
 
     axes[0].plot(data["elements"], data["cpp_time"], 'o-', color=color, label="C++ Time (s)")
-    axes[0].plot(data["elements"], data["haskell_time"], 'o--', color="#C397D8", label="Haskell Time (s)")
+    axes[0].plot(data["elements"], data["haskell_time"], 'o--', color="#4B0082", label="Haskell Time (s)")
     axes[0].set_title(f"{selected_ds}: Execution Time Comparison", fontsize=16, weight="bold", color="#483D8B")
     axes[0].set_xlabel("Number of Elements", fontsize=12, color="#483D8B")
     axes[0].set_ylabel("Time (s)", fontsize=12, color="#483D8B")
@@ -73,7 +73,7 @@ def update_graph(selected_ds, axes, fig):
     axes[0].legend(fontsize=10, facecolor="#F5F5F5", edgecolor="white", labelcolor="#483D8B")
 
     axes[1].plot(data["elements"], data["cpp_memory"], 'o-', color=color, label="C++ Memory (bytes)")
-    axes[1].plot(data["elements"], data["haskell_memory"], 'o--', color="#C397D8", label="Haskell Memory (bytes)")
+    axes[1].plot(data["elements"], data["haskell_memory"], 'o--', color="#4B0082", label="Haskell Memory (bytes)")
     axes[1].set_title(f"{selected_ds}: Memory Usage Comparison", fontsize=16, weight="bold", color="#483D8B")
     axes[1].set_xlabel("Number of Elements", fontsize=12, color="#483D8B")
     axes[1].set_ylabel("Memory (bytes)", fontsize=12, color="#483D8B")
